@@ -74,6 +74,7 @@ namespace NZWalks.API.Controllers
             {
                 return NotFound();
             }
+
            return Ok(_mapper.Map<RegionDTO>(RegionDataModel));
 
         }
