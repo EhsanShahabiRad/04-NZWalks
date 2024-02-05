@@ -50,7 +50,7 @@ namespace NZWalks.API.Repositories
             if (result == null) { return null; }
             result.Name = walk.Name;
             result.Description = walk.Description;
-            result.lenghInKm = walk.lenghInKm;
+            result.LengthInKm = walk.LengthInKm;
             result.WalkImageUrl = walk.WalkImageUrl;
             result.RegionId = walk.RegionId;
             result.DifficultyId = walk.DifficultyId;
