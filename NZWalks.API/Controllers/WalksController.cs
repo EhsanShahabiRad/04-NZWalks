@@ -9,21 +9,23 @@ namespace NZWalks.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WalkController : ControllerBase
+    public class WalksController : ControllerBase
     {
         private readonly IWalkRepository _walkRepository;
         private readonly IMapper _mapper;
 
-        public WalkController(IWalkRepository walkRepository , IMapper mapper)
+        public WalksController(IWalkRepository walkRepository , IMapper mapper)
         {
             _walkRepository = walkRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task< IActionResult> GetAllAsync() { 
+        //Get Walks
+        //Get: /api/walks?filterOn=Name&filterQuery=Track
+        public async Task< IActionResult> GetAllAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery) { 
         
-            var walkDataModel = await _walkRepository.GetAllAsync();
+            var walkDataModel = await _walkRepository.GetAllAsync(filterOn,filterQuery);
            return Ok( _mapper.Map<List<WalkDTO>>(walkDataModel));
 
         }

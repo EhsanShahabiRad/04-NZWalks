@@ -25,10 +25,10 @@ namespace NZWalks.API.Controllers
        
         //Get All Regions
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
             
-            var result = await _regionRepository.GetAllAsync();
+            var result = await _regionRepository.GetAllAsync(filterOn, filterQuery);
             
             List<RegionDTO> regions = new List<RegionDTO>();
             
