@@ -30,13 +30,13 @@ namespace NZWalks.API.Repositories
 
         public async Task<List<Walk>> GetAllAsync()
         {
-            var result = await _dbContext.Walks.ToListAsync();
+            var result = await _dbContext.Walks.Include(x=>x.Region).Include(x=>x.Difficulty).ToListAsync();
             return result;
         }
 
         public async Task<Walk?> GetById(Guid id)
         {
-            var result = await _dbContext.Walks.FindAsync(id);
+            var result = await _dbContext.Walks.Include(x => x.Region).Include(x => x.Difficulty).FirstOrDefaultAsync(x=>x.Id == id);
             if (result == null)
             {
                 return null;
@@ -46,7 +46,7 @@ namespace NZWalks.API.Repositories
 
         public async Task<Walk?> UpdateAsync(Guid id, Walk walk)
         {
-          var result = await _dbContext.Walks.FindAsync(id);
+          var result = await _dbContext.Walks.Include(x=>x.Region).Include(x=>x.Difficulty).FirstOrDefaultAsync(x=>x.Id == id);
             if (result == null) { return null; }
             result.Name = walk.Name;
             result.Description = walk.Description;
