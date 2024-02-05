@@ -30,7 +30,8 @@ namespace NZWalks.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -66,7 +67,8 @@ namespace NZWalks.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RegionImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -130,19 +132,19 @@ namespace NZWalks.API.Migrations
                     b.Property<Guid>("DifficultyId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<double>("LengthInKm")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("RegionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("WalkImageUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("lenghInKm")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
