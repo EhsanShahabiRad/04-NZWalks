@@ -15,7 +15,7 @@ namespace NZWalks.API.Repositories
         public async Task<Walk> CreateAsync(Walk walk)
         {
             await _dbContext.Walks.AddAsync(walk);
-            await  _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return walk;
         }
 
@@ -23,20 +23,30 @@ namespace NZWalks.API.Repositories
         {
             var result = await _dbContext.Walks.FindAsync(id);
             if (result == null) { return null; }
-             _dbContext.Remove(result);
+            _dbContext.Remove(result);
             await _dbContext.SaveChangesAsync();
             return result;
         }
 
-        public async Task<List<Walk>> GetAllAsync()
+        public async Task<List<Walk>> GetAllAsync(string? filterOn, string? filterQuery)
         {
-            var result = await _dbContext.Walks.Include(x=>x.Region).Include(x=>x.Difficulty).ToListAsync();
-            return result;
+            var result = _dbContext.Walks.Include(x => x.Region).Include(x => x.Difficulty).AsQueryable();
+
+            if (string.IsNullOrEmpty(filterOn) == false && String.IsNullOrEmpty(filterQuery) == false)
+            {
+                result = filterOn.Equals("name", StringComparison.OrdinalIgnoreCase) ? result.Where(x => x.Name.Contains(filterQuery))
+                       : filterOn.Equals("LengthInKm", StringComparison.OrdinalIgnoreCase) ? double.TryParse(filterQuery, out var length) ? result.Where(x => x.LengthInKm == length) : result
+                       : filterOn.Equals("Description", StringComparison.OrdinalIgnoreCase) ? result.Where(x => x.Description.Contains(filterQuery))
+                       : result;
+            }
+
+
+            return await result.ToListAsync();
         }
 
         public async Task<Walk?> GetById(Guid id)
         {
-            var result = await _dbContext.Walks.Include(x => x.Region).Include(x => x.Difficulty).FirstOrDefaultAsync(x=>x.Id == id);
+            var result = await _dbContext.Walks.Include(x => x.Region).Include(x => x.Difficulty).FirstOrDefaultAsync(x => x.Id == id);
             if (result == null)
             {
                 return null;
@@ -46,7 +56,7 @@ namespace NZWalks.API.Repositories
 
         public async Task<Walk?> UpdateAsync(Guid id, Walk walk)
         {
-          var result = await _dbContext.Walks.Include(x=>x.Region).Include(x=>x.Difficulty).FirstOrDefaultAsync(x=>x.Id == id);
+            var result = await _dbContext.Walks.Include(x => x.Region).Include(x => x.Difficulty).FirstOrDefaultAsync(x => x.Id == id);
             if (result == null) { return null; }
             result.Name = walk.Name;
             result.Description = walk.Description;
@@ -55,7 +65,7 @@ namespace NZWalks.API.Repositories
             result.RegionId = walk.RegionId;
             result.DifficultyId = walk.DifficultyId;
 
-           await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return result;
         }
     }
