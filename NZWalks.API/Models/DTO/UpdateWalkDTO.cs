@@ -1,4 +1,6 @@
-﻿namespace NZWalks.API.Models.DTO
+﻿using NZWalks.API.Models.Domain;
+
+namespace NZWalks.API.Models.DTO
 {
     public class UpdateWalkDTO
     {
@@ -9,5 +11,8 @@
 
         public Guid RegionId { get; set; }
         public Guid DifficultyId { get; set; }
+
+        public Region Region { get; set; }
+        public Difficulty Difficulty { get; set; }
     }
 }

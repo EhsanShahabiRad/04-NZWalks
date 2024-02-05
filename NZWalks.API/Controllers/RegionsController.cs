@@ -27,7 +27,8 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-         var result = await _regionRepository.GetAllAsync();
+            
+            var result = await _regionRepository.GetAllAsync();
             
             List<RegionDTO> regions = new List<RegionDTO>();
             
@@ -54,6 +55,10 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddRegionDTO regionDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             Region region = _mapper.Map<Region>(regionDto);
 
             region = await _regionRepository.CreateAsync(region);
