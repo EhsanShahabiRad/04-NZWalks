@@ -22,13 +22,13 @@ namespace NZWalks.API.Controllers
 
         [HttpGet]
         //Get Walks
-        //Get: /api/walks?filterOn=Name&filterQuery=Track
-        public async Task< IActionResult> GetAllAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery) { 
+        //Get: /api/walks?filterOn=Name&filterQuery=Track&sortBy=Name&isAscending=True&pageNumber = 1&pageSize=1000
+        public async Task< IActionResult> GetAllAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
+            [FromQuery] string? SortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1 , [FromQuery] int pageSize = 1000){ 
         
-            var walkDataModel = await _walkRepository.GetAllAsync(filterOn,filterQuery);
-           return Ok( _mapper.Map<List<WalkDTO>>(walkDataModel));
-
-        }
+            var walkDataModel = await _walkRepository.GetAllAsync(filterOn,filterQuery,SortBy,isAscending ?? true,pageNumber,pageSize);
+            return Ok( _mapper.Map<List<WalkDTO>>(walkDataModel));
+            }
         [HttpGet]
         [Route("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)

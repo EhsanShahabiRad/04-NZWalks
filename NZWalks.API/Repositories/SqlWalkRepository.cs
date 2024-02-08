@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 
@@ -28,10 +29,11 @@ namespace NZWalks.API.Repositories
             return result;
         }
 
-        public async Task<List<Walk>> GetAllAsync(string? filterOn, string? filterQuery)
+        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery= null, string? sortBy = null, bool isAscenging = true ,int pageNumber = 1, int pageSize = 1000)
         {
             var result = _dbContext.Walks.Include(x => x.Region).Include(x => x.Difficulty).AsQueryable();
 
+            //Filtering
             if (string.IsNullOrEmpty(filterOn) == false && String.IsNullOrEmpty(filterQuery) == false)
             {
                 result = filterOn.Equals("name", StringComparison.OrdinalIgnoreCase) ? result.Where(x => x.Name.Contains(filterQuery))
@@ -39,7 +41,20 @@ namespace NZWalks.API.Repositories
                        : filterOn.Equals("Description", StringComparison.OrdinalIgnoreCase) ? result.Where(x => x.Description.Contains(filterQuery))
                        : result;
             }
-
+            //Sorting
+            if (string.IsNullOrEmpty(sortBy) == false )
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                   result = isAscenging ? result.OrderBy(x=>x.Name) : result.OrderByDescending(x=>x.Name);
+                }
+                else if(sortBy.Equals("Lengh", StringComparison.OrdinalIgnoreCase )) {
+                    result = isAscenging ? result.OrderBy(x => x.LengthInKm) : result.OrderByDescending(x => x.LengthInKm);
+                }
+            }
+            //Pagination
+            var skipItem = (pageNumber - 1) * pageSize;
+            result = result.Skip(skipItem).Take(pageSize);
 
             return await result.ToListAsync();
         }

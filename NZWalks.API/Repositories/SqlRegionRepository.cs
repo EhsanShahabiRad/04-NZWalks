@@ -30,7 +30,7 @@ namespace NZWalks.API.Repositories
             return region;
         }
 
-        public async Task<List<Region>> GetAllAsync(string? filterOn, string? filterQeuery)
+        public async Task<List<Region>> GetAllAsync(string? filterOn = null, string? filterQeuery = null)
         {
             var result = _dbContext.regions.AsQueryable();
 
